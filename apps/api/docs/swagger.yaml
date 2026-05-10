@@ -1,0 +1,51 @@
+basePath: /api/v1
+definitions:
+  github_com_notopos_api_internal_common.Response:
+    properties:
+      data: {}
+      errors: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  internal_modules_auth.LoginRequest:
+    properties:
+      email:
+        example: admin@notopos.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact:
+    name: API Support
+  description: Enterprise-grade AI POS API
+  title: NOTOPOS AI API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_modules_auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_notopos_api_internal_common.Response'
+      summary: Login user
+      tags:
+      - Authentication
+swagger: "2.0"
