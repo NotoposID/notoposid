@@ -23,10 +23,10 @@ build-api:
 
 # Infrastruktur (Docker)
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down
+	docker compose down
 
 # Database Migrations (Jika menggunakan alat migrasi kedepannya)
 migrate-up:
