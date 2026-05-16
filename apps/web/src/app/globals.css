@@ -85,6 +85,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings:
@@ -99,9 +100,7 @@
 }
 
 @utility hero-gradient {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(59, 130, 246, 0.15) 0%,
-    transparent 50%
-  );
+  background: radial-gradient(circle at 50% 50%,
+      rgba(59, 130, 246, 0.15) 0%,
+      transparent 50%);
 }
