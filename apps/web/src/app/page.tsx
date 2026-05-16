@@ -2,17 +2,18 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  Bot, 
-  BarChart3, 
-  ShoppingBag, 
-  Users, 
-  ShieldCheck, 
+import {
+  Bot,
+  BarChart3,
+  ShoppingBag,
+  Users,
+  ShieldCheck,
   Zap,
   ArrowRight,
   TrendingUp,
   BrainCircuit
 } from "lucide-react";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
@@ -53,7 +54,7 @@ export default function LandingPage() {
               <span className="text-primary">AI-Powered</span> Intelligence
             </h1>
             <p className="max-w-2xl mx-auto text-muted-foreground text-lg mb-10 leading-relaxed">
-              The only POS system that doesn't just record sales—it predicts them. 
+              The only POS system that doesn&apos;t just record sales—it predicts them.
               Integrated with cutting-edge AI to help UMKM, Cafes, and Retailers grow faster.
             </p>
             <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
@@ -67,7 +68,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Dashboard Preview Mockup */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -75,33 +76,35 @@ export default function LandingPage() {
             className="mt-20 relative"
           >
             <div className="max-w-5xl mx-auto p-4 glass rounded-2xl shadow-2xl border border-white/10">
-              <div className="aspect-video bg-muted/30 rounded-lg flex items-center justify-center overflow-hidden">
-                <img 
-                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop" 
-                   alt="Dashboard Preview"
-                   className="w-full h-full object-cover opacity-80"
+              <div className="relative aspect-video bg-muted/30 rounded-lg flex items-center justify-center overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop"
+                  alt="Dashboard Preview"
+                  fill
+                  priority
+                  className="object-cover opacity-80"
                 />
               </div>
             </div>
             {/* Floating Stats */}
             <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-4 w-full justify-center px-6">
-                {[
-                  { label: "Sales Growth", val: "+24%", icon: TrendingUp, color: "text-green-500" },
-                  { label: "AI Insights", val: "Real-time", icon: BrainCircuit, color: "text-primary" },
-                  { label: "Uptime", val: "99.9%", icon: ShieldCheck, color: "text-blue-500" }
-                ].map((stat, i) => (
-                  <motion.div 
-                    key={i}
-                    whileHover={{ y: -5 }}
-                    className="glass p-6 rounded-2xl min-w-[200px] border border-white/10 shadow-xl"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <stat.icon className={stat.color} size={24} />
-                      <span className={`font-bold ${stat.color}`}>{stat.val}</span>
-                    </div>
-                    <div className="text-sm font-medium text-muted-foreground">{stat.label}</div>
-                  </motion.div>
-                ))}
+              {[
+                { label: "Sales Growth", val: "+24%", icon: TrendingUp, color: "text-green-500" },
+                { label: "AI Insights", val: "Real-time", icon: BrainCircuit, color: "text-primary" },
+                { label: "Uptime", val: "99.9%", icon: ShieldCheck, color: "text-blue-500" }
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -5 }}
+                  className="glass p-6 rounded-2xl min-w-[200px] border border-white/10 shadow-xl"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <stat.icon className={stat.color} size={24} />
+                    <span className={`font-bold ${stat.color}`}>{stat.val}</span>
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">{stat.label}</div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -114,7 +117,7 @@ export default function LandingPage() {
             <h2 className="text-4xl font-bold mb-4">Intelligent Business Core</h2>
             <p className="text-muted-foreground">More than just a cash register—a business brain.</p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
@@ -188,7 +191,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t text-sm text-muted-foreground gap-4">
-            <p>© 2024 NOTOPOS AI. All rights reserved.</p>
+            <p>© 2026 NOTOPOS AI. All rights reserved.</p>
             <div className="flex gap-8">
               <a href="#" className="hover:text-primary">Twitter</a>
               <a href="#" className="hover:text-primary">LinkedIn</a>

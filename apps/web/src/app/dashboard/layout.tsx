@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { 
-  LayoutDashboard, 
-  ShoppingCart, 
-  Package, 
-  Users, 
-  Settings, 
-  PieChart, 
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Users,
+  Settings,
+  PieChart,
   Bell,
   Search,
   Plus
@@ -28,7 +28,7 @@ export default function DashboardLayout({
           </div>
           <span className="font-bold tracking-tight">NOTOPOS <span className="text-primary text-xs">AI</span></span>
         </div>
-        
+
         <nav className="flex-1 p-4 space-y-1">
           {[
             { name: "Dashboard", icon: LayoutDashboard, active: true },
@@ -41,11 +41,10 @@ export default function DashboardLayout({
             <a
               key={item.name}
               href="#"
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
-                item.active 
-                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${item.active
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`}
+                }`}
             >
               <item.icon size={18} />
               {item.name}
@@ -57,7 +56,7 @@ export default function DashboardLayout({
           <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
             <p className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">AI Assistant</p>
             <p className="text-[10px] text-muted-foreground mb-3 leading-tight">
-              Predicting 12% sales increase next week. Restock item "Cappuccino" now.
+              Predicting 12% sales increase next week. Restock item &quot;Cappuccino&quot; now.
             </p>
             <button className="w-full bg-primary text-primary-foreground py-2 rounded-lg text-[10px] font-bold hover:opacity-90">
               View AI Report
@@ -72,13 +71,13 @@ export default function DashboardLayout({
         <header className="h-16 bg-background border-b px-8 flex items-center justify-between">
           <div className="relative w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search anything..." 
+            <input
+              type="text"
+              placeholder="Search anything..."
               className="w-full bg-muted/50 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-1 ring-primary outline-none"
             />
           </div>
-          
+
           <div className="flex items-center gap-4">
             <button className="bg-primary/10 text-primary p-2 rounded-full hover:bg-primary/20 transition-all relative">
               <Plus size={20} />

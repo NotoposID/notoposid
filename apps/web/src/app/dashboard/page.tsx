@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { 
-  ArrowUpRight, 
-  ArrowDownRight, 
-  TrendingUp, 
-  Package, 
-  ShoppingBag, 
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  TrendingUp,
+  Package,
+  ShoppingBag,
   Users,
   BrainCircuit,
   Lightbulb
@@ -19,11 +19,11 @@ export default function DashboardPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Business Overview</h1>
-          <p className="text-muted-foreground mt-1">Here's what's happening with NOTOPOS AI today.</p>
+          <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening with NOTOPOS AI today.</p>
         </div>
         <div className="flex gap-2">
-            <button className="px-4 py-2 bg-background border rounded-xl text-sm font-medium hover:bg-muted transition-all">Download Report</button>
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-all">New Transaction</button>
+          <button className="px-4 py-2 bg-background border rounded-xl text-sm font-medium hover:bg-muted transition-all">Download Report</button>
+          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold hover:opacity-90 transition-all">New Transaction</button>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ export default function DashboardPage() {
           { label: "Active Items", val: "1,240", trend: "-2.1%", icon: Package, pos: false },
           { label: "New Customers", val: "48", trend: "+18.3%", icon: Users, pos: true },
         ].map((stat, i) => (
-          <motion.div 
+          <motion.div
             key={i}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -67,29 +67,29 @@ export default function DashboardPage() {
             </select>
           </div>
           <div className="h-64 w-full bg-muted/20 rounded-2xl flex items-center justify-center relative overflow-hidden">
-             {/* Chart Placeholder SVG */}
-             <svg className="w-full h-full px-4" viewBox="0 0 400 100">
-                <path 
-                  d="M0,80 Q50,70 100,50 T200,60 T300,20 T400,30" 
-                  fill="none" 
-                  stroke="hsl(var(--primary))" 
-                  strokeWidth="3"
-                />
-                <path 
-                  d="M0,80 Q50,70 100,50 T200,60 T300,20 T400,30 V100 H0 Z" 
-                  fill="url(#gradient)" 
-                  className="opacity-10"
-                />
-                <defs>
-                  <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--primary))" />
-                    <stop offset="100%" stopColor="transparent" />
-                  </linearGradient>
-                </defs>
-             </svg>
-             <div className="absolute bottom-4 left-0 w-full flex justify-between px-8 text-[10px] text-muted-foreground font-medium">
-                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-             </div>
+            {/* Chart Placeholder SVG */}
+            <svg className="w-full h-full px-4" viewBox="0 0 400 100">
+              <path
+                d="M0,80 Q50,70 100,50 T200,60 T300,20 T400,30"
+                fill="none"
+                stroke="hsl(var(--primary))"
+                strokeWidth="3"
+              />
+              <path
+                d="M0,80 Q50,70 100,50 T200,60 T300,20 T400,30 V100 H0 Z"
+                fill="url(#gradient)"
+                className="opacity-10"
+              />
+              <defs>
+                <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" />
+                  <stop offset="100%" stopColor="transparent" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute bottom-4 left-0 w-full flex justify-between px-8 text-[10px] text-muted-foreground font-medium">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
           </div>
         </div>
 
@@ -107,13 +107,13 @@ export default function DashboardPage() {
               </div>
               <div className="bg-white/10 p-4 rounded-2xl border border-white/10">
                 <p className="text-xs font-medium mb-1 opacity-80">Inventory Alert</p>
-                <p className="text-sm font-bold">Stock of 'Milk' will run out in 2 days. Reorder now to avoid loss.</p>
+                <p className="text-sm font-bold">Stock of &apos;Milk&apos; will run out in 2 days. Reorder now to avoid loss.</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 bg-background rounded-3xl border shadow-sm">
-             <div className="flex items-center gap-2 mb-4 text-orange-500">
+            <div className="flex items-center gap-2 mb-4 text-orange-500">
               <Lightbulb size={20} />
               <h3 className="font-bold text-foreground">Smart Suggestions</h3>
             </div>
