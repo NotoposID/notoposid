@@ -13,6 +13,7 @@ import (
 	"github.com/notopos/api/internal/database"
 	"github.com/notopos/api/internal/middleware"
 	"github.com/notopos/api/internal/modules/auth"
+	"github.com/notopos/api/internal/modules/users"
 )
 
 // @title NOTOPOS AI API
@@ -50,10 +51,22 @@ func main() {
 	authGroup.Post("/login", authHandler.Login)
 
 	// Protected Routes (Example)
-	protected := api.Group("/protected", middleware.TenantMiddleware())
+	protected := api.Group("/", middleware.TenantMiddleware())
 	protected.Get("/me", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"tenant_id": c.Locals("tenantID")})
 	})
+
+	// Users Routes
+	userRepo := users.NewRepository(database.DB)
+	userService := users.NewService()
+	userHandler := users.NewHandler(userRepo, userService)
+	
+	usersGroup := protected.Group("/users")
+	usersGroup.Post("/", userHandler.Create)
+	usersGroup.Get("/", userHandler.GetAll)
+	usersGroup.Get("/:id", userHandler.GetByID)
+	usersGroup.Put("/:id", userHandler.Update)
+	usersGroup.Delete("/:id", userHandler.Delete)
 
 	// Health check
 	app.Get("/health", func(c *fiber.Ctx) error {

@@ -9,7 +9,7 @@ func TenantMiddleware() fiber.Handler {
 		// In a real app, you'd get this from JWT claims
 		// or a custom header for API keys.
 		tenantID := c.Get("X-Tenant-ID")
-		
+
 		if tenantID == "" {
 			// For demonstration, we'll allow it but in production
 			// you should return 401/403 if required.
