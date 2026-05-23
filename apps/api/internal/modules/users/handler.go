@@ -19,16 +19,16 @@ func NewHandler(repo Repository, service Service) *Handler {
 }
 
 type CreateUserRequest struct {
-	Name     string `json:"name" example:"John Doe"`
-	Email    string `json:"email" example:"john@example.com"`
-	Password string `json:"password" example:"secret123"`
-	Role     string `json:"role" example:"staff"`
+	Name     string `json:"name" validate:"required" example:"John Doe"`
+	Email    string `json:"email" validate:"required,email" example:"john@example.com"`
+	Password string `json:"password" validate:"required,min=6" example:"secret123"`
+	Role     string `json:"role" validate:"required" example:"staff"`
 }
 
 type UpdateUserRequest struct {
-	Name  string `json:"name" example:"John Updated"`
-	Role  string `json:"role" example:"admin"`
-	Email string `json:"email" example:"john@example.com"`
+	Name  string `json:"name" validate:"required" example:"John Updated"`
+	Role  string `json:"role" validate:"required" example:"admin"`
+	Email string `json:"email" validate:"required,email" example:"john@example.com"`
 }
 
 // Create godoc
@@ -47,7 +47,16 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 
 	var req CreateUserRequest
 	if err := c.BodyParser(&req); err != nil {
-		return common.ErrorResponse(c, fiber.StatusBadRequest, "Invalid request", nil)
+		return common.ErrorResponse(c, fiber.StatusBadRequest, "Format tipe data tidak valid", err.Error())
+	}
+
+	if errs := common.ValidateStruct(&req); errs != nil {
+		return common.ErrorResponse(c, fiber.StatusBadRequest, "Validasi gagal", errs)
+	}
+
+	// validation unique email from request body
+	if _, err := h.repo.GetByEmail(req.Email, tenantID); err == nil {
+		return common.ErrorResponse(c, fiber.StatusBadRequest, "Email sudah terdaftar", nil)
 	}
 
 	passwordHash, err := h.service.HashPassword(req.Password)
@@ -130,7 +139,11 @@ func (h *Handler) Update(c *fiber.Ctx) error {
 
 	var req UpdateUserRequest
 	if err := c.BodyParser(&req); err != nil {
-		return common.ErrorResponse(c, fiber.StatusBadRequest, "Invalid request", nil)
+		return common.ErrorResponse(c, fiber.StatusBadRequest, "Format tipe data tidak valid", err.Error())
+	}
+
+	if errs := common.ValidateStruct(&req); errs != nil {
+		return common.ErrorResponse(c, fiber.StatusBadRequest, "Validasi gagal", errs)
 	}
 
 	user, err := h.repo.GetByID(id, tenantID)

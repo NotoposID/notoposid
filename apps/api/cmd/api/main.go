@@ -13,6 +13,8 @@ import (
 	"github.com/notopos/api/internal/database"
 	"github.com/notopos/api/internal/middleware"
 	"github.com/notopos/api/internal/modules/auth"
+	"github.com/notopos/api/internal/modules/categories"
+	"github.com/notopos/api/internal/modules/products"
 	"github.com/notopos/api/internal/modules/users"
 )
 
@@ -67,6 +69,30 @@ func main() {
 	usersGroup.Get("/:id", userHandler.GetByID)
 	usersGroup.Put("/:id", userHandler.Update)
 	usersGroup.Delete("/:id", userHandler.Delete)
+
+	// Categories Routes
+	categoryRepo := categories.NewRepository(database.DB)
+	categoryService := categories.NewService()
+	categoryHandler := categories.NewHandler(categoryRepo, categoryService)
+
+	categoriesGroup := protected.Group("/categories")
+	categoriesGroup.Post("/", categoryHandler.Create)
+	categoriesGroup.Get("/", categoryHandler.GetAll)
+	categoriesGroup.Get("/:id", categoryHandler.GetByID)
+	categoriesGroup.Put("/:id", categoryHandler.Update)
+	categoriesGroup.Delete("/:id", categoryHandler.Delete)
+
+	// Products Routes
+	productRepo := products.NewRepository(database.DB)
+	productService := products.NewService(productRepo)
+	productHandler := products.NewHandler(productRepo, productService)
+
+	productsGroup := protected.Group("/products")
+	productsGroup.Post("/", productHandler.Create)
+	productsGroup.Get("/", productHandler.GetAll)
+	productsGroup.Get("/:id", productHandler.GetByID)
+	productsGroup.Put("/:id", productHandler.Update)
+	productsGroup.Delete("/:id", productHandler.Delete)
 
 	// Health check
 	app.Get("/health", func(c *fiber.Ctx) error {

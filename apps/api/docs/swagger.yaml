@@ -9,6 +9,24 @@ definitions:
         example: password123
         type: string
     type: object
+  categories.CreateCategoryRequest:
+    properties:
+      description:
+        example: All kinds of drinks
+        type: string
+      name:
+        example: Beverages
+        type: string
+    type: object
+  categories.UpdateCategoryRequest:
+    properties:
+      description:
+        example: Updated description
+        type: string
+      name:
+        example: Beverages Updated
+        type: string
+    type: object
   common.Response:
     properties:
       data: {}
@@ -17,6 +35,72 @@ definitions:
         type: string
       success:
         type: boolean
+    type: object
+  products.CreateProductRequest:
+    properties:
+      barcode:
+        example: "123456789012"
+        type: string
+      category_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      cost_price:
+        example: 15000
+        type: number
+      description:
+        example: Hot cappuccino with latte art
+        type: string
+      image_url:
+        example: https://example.com/cappuccino.jpg
+        type: string
+      min_stock_level:
+        example: 20
+        type: integer
+      name:
+        example: Cappuccino
+        type: string
+      price:
+        example: 35000
+        type: number
+      sku:
+        example: CAP-01
+        type: string
+      stock_quantity:
+        example: 100
+        type: integer
+    type: object
+  products.UpdateProductRequest:
+    properties:
+      barcode:
+        example: "123456789013"
+        type: string
+      category_id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      cost_price:
+        example: 20000
+        type: number
+      description:
+        example: Large hot cappuccino
+        type: string
+      image_url:
+        example: https://example.com/cappuccino-lg.jpg
+        type: string
+      min_stock_level:
+        example: 10
+        type: integer
+      name:
+        example: Cappuccino Large
+        type: string
+      price:
+        example: 45000
+        type: number
+      sku:
+        example: CAP-02
+        type: string
+      stock_quantity:
+        example: 50
+        type: integer
     type: object
   users.CreateUserRequest:
     properties:
@@ -75,6 +159,252 @@ paths:
       summary: Login user
       tags:
       - Authentication
+  /categories:
+    get:
+      description: Get all categories for the current tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: List all categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new product category for the current tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Category details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/categories.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Create a new category
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      description: Remove a category from the tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Delete category
+      tags:
+      - Categories
+    get:
+      description: Get a specific category by its UUID
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Get category by ID
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      description: Update category details
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated category details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/categories.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Update category
+      tags:
+      - Categories
+  /products:
+    get:
+      description: Get all products for the current tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: List all products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product for the current tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Product details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/products.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Create a new product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      description: Remove a product from the tenant
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      description: Get a specific product by its UUID
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Get product by ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Update product details
+      parameters:
+      - description: Tenant ID
+        in: header
+        name: X-Tenant-ID
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated product details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/products.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Update product
+      tags:
+      - Products
   /users:
     get:
       description: Get all users for the current tenant
