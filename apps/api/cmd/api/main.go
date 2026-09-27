@@ -47,8 +47,13 @@ func main() {
 	// API Groups
 	api := app.Group("/api/v1")
 
+	// Users Repo setup first
+	userRepo := users.NewRepository(database.DB)
+	userService := users.NewService()
+	userHandler := users.NewHandler(userRepo, userService)
+
 	// Auth Routes
-	authHandler := auth.NewHandler(cfg)
+	authHandler := auth.NewHandler(cfg, userRepo)
 	authGroup := api.Group("/auth")
 	authGroup.Post("/login", authHandler.Login)
 
@@ -58,11 +63,6 @@ func main() {
 		return c.JSON(fiber.Map{"tenant_id": c.Locals("tenantID")})
 	})
 
-	// Users Routes
-	userRepo := users.NewRepository(database.DB)
-	userService := users.NewService()
-	userHandler := users.NewHandler(userRepo, userService)
-	
 	usersGroup := protected.Group("/users")
 	usersGroup.Post("/", userHandler.Create)
 	usersGroup.Get("/", userHandler.GetAll)

@@ -31,6 +31,7 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-primary transition-colors">Features</a>
             <a href="#ai" className="hover:text-primary transition-colors">AI Intelligence</a>
             <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
+            <a href="/login" className="font-bold text-foreground hover:text-primary transition-colors">Login</a>
             <button className="bg-primary text-primary-foreground px-6 py-2.5 rounded-full hover:opacity-90 transition-all font-semibold">
               Get Started
             </button>

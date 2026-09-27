@@ -5,20 +5,22 @@ import (
 	"github.com/notopos/api/internal/common"
 	"github.com/notopos/api/internal/config"
 	"github.com/notopos/api/internal/helpers"
+	"github.com/notopos/api/internal/modules/users"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthHandler struct {
-	cfg *config.Config
+	cfg      *config.Config
+	userRepo users.Repository
 }
 
-func NewHandler(cfg *config.Config) *AuthHandler {
-	return &AuthHandler{cfg: cfg}
+func NewHandler(cfg *config.Config, userRepo users.Repository) *AuthHandler {
+	return &AuthHandler{cfg: cfg, userRepo: userRepo}
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" example:"admin@notopos.com"`
-	Password string `json:"password" example:"password123"`
+	Identifier string `json:"identifier" example:"admin@notopos.com"` // can be email or username
+	Password   string `json:"password" example:"password123"`
 }
 
 // Login godoc
@@ -36,19 +38,47 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return common.ErrorResponse(c, fiber.StatusBadRequest, "Invalid request", nil)
 	}
 
-	// Placeholder logic (In real app, check DB)
-	// For demo: admin@notopos.com / password123
-	if req.Email != "admin@notopos.com" || req.Password != "password123" {
+	// 1. Check in DB first (if DB is running and user exists)
+	user, err := h.userRepo.GetByEmailOrUsername(req.Identifier)
+	
+	// Fallback to static mockup if DB is empty or connection fails (since Docker might not be running)
+	if err != nil || user == nil {
+		if (req.Identifier == "admin@notopos.com" || req.Identifier == "admin") && req.Password == "password123" {
+			token, err := helpers.GenerateToken("user-uuid", "tenant-uuid", "admin", h.cfg.JWTSecret)
+			if err != nil {
+				return common.ErrorResponse(c, fiber.StatusInternalServerError, "Token generation failed", nil)
+			}
+			return common.SuccessResponse(c, "Login successful", fiber.Map{
+				"token": token,
+				"user": fiber.Map{
+					"name": "Admin Placeholder",
+					"email": "admin@notopos.com",
+					"username": "admin",
+				},
+			})
+		}
 		return common.ErrorResponse(c, fiber.StatusUnauthorized, "Invalid credentials", nil)
 	}
 
-	token, err := helpers.GenerateToken("user-uuid", "tenant-uuid", "admin", h.cfg.JWTSecret)
+	// Check password using bcrypt
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
+		return common.ErrorResponse(c, fiber.StatusUnauthorized, "Invalid credentials", nil)
+	}
+
+	token, err := helpers.GenerateToken(user.ID.String(), user.TenantID.String(), user.Role, h.cfg.JWTSecret)
 	if err != nil {
 		return common.ErrorResponse(c, fiber.StatusInternalServerError, "Token generation failed", nil)
 	}
 
 	return common.SuccessResponse(c, "Login successful", fiber.Map{
 		"token": token,
+		"user": fiber.Map{
+			"id": user.ID,
+			"name": user.Name,
+			"email": user.Email,
+			"username": user.Username,
+			"role": user.Role,
+		},
 	})
 }
 

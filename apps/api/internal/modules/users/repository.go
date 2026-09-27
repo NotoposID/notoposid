@@ -11,6 +11,7 @@ type User struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()"`
 	TenantID     uuid.UUID `gorm:"type:uuid;not null;index"`
 	Name         string    `gorm:"size:255;not null"`
+	Username     string    `gorm:"size:255;uniqueIndex"`
 	Email        string    `gorm:"size:255;not null"`
 	PasswordHash string    `gorm:"type:text"`
 	Role         string    `gorm:"size:50;default:'staff'"` // owner, admin, manager, staff
@@ -25,6 +26,7 @@ type Repository interface {
 	GetAll(tenantID uuid.UUID) ([]User, error)
 	GetByID(id uuid.UUID, tenantID uuid.UUID) (*User, error)
 	GetByEmail(email string, tenantID uuid.UUID) (*User, error)
+	GetByEmailOrUsername(identifier string) (*User, error)
 	Update(user *User) error
 	Delete(id uuid.UUID, tenantID uuid.UUID) error
 }
@@ -56,6 +58,12 @@ func (r *userRepository) GetByID(id uuid.UUID, tenantID uuid.UUID) (*User, error
 func (r *userRepository) GetByEmail(email string, tenantID uuid.UUID) (*User, error) {
 	var user User
 	err := r.db.Where("email = ? AND tenant_id = ?", email, tenantID).First(&user).Error
+	return &user, err
+}
+
+func (r *userRepository) GetByEmailOrUsername(identifier string) (*User, error) {
+	var user User
+	err := r.db.Where("email = ? OR username = ?", identifier, identifier).First(&user).Error
 	return &user, err
 }
 
