@@ -43,6 +43,16 @@ CREATE TABLE outlets (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Product Units (Satuan)
+CREATE TABLE units (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    unit_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Product Categories
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -58,6 +68,7 @@ CREATE TABLE products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
     category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
+    unit_id UUID REFERENCES units(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     sku VARCHAR(100),
     barcode VARCHAR(100),
@@ -66,9 +77,10 @@ CREATE TABLE products (
     cost_price DECIMAL(15, 2),
     stock_quantity INT DEFAULT 0,
     min_stock_level INT DEFAULT 10,
+    expired_date DATE,
     image_url TEXT,
-    -- AI Embedding for recommendations (384/1536 depending on model)
     embedding vector(1536),
+    hpp_price DECIMAL(15, 2),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -99,6 +111,33 @@ CREATE TABLE transaction_items (
     total DECIMAL(15, 2) NOT NULL
 );
 
+-- Products Histories
+CREATE TABLE product_histories (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT UNSIGNED NOT NULL,
+    type ENUM(
+        'sale',
+        'purchase',
+        'adjustment',
+        'return_sale',
+        'return_purchase',
+        'expired',
+        'damaged'
+    ) NOT NULL,
+    reference_id BIGINT UNSIGNED NULL,
+    reference_type VARCHAR(50) NULL,
+    qty DECIMAL(15,3) NOT NULL DEFAULT 0,
+    price DECIMAL(15,2) NOT NULL DEFAULT 0,
+    subtotal DECIMAL(15,2) NOT NULL DEFAULT 0,
+    stock_before DECIMAL(15,3) NOT NULL DEFAULT 0,
+    stock_after DECIMAL(15,3) NOT NULL DEFAULT 0,
+    note VARCHAR(255) NULL,
+    created_by BIGINT UNSIGNED NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_product_history_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    CONSTRAINT fk_product_history_user FOREIGN KEY (created_by) REFERENCES users(id)ON DELETE SET NULL
+);
+
 -- Inventory Movement Logs
 CREATE TABLE inventory_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -126,3 +165,39 @@ CREATE TABLE ai_logs (
 CREATE INDEX idx_products_tenant ON products(tenant_id);
 CREATE INDEX idx_transactions_tenant ON transactions(tenant_id);
 CREATE INDEX idx_inventory_logs_product ON inventory_logs(product_id);
+
+
+
+
+
+🛒 Kasir / transaksi penjualan √
+📦 Manajemen produk √
+🏷️ Barcode scanner
+📊 Stok barang √
+⚠️ Notifikasi stok minimum √
+🚚 Supplier
+📥 Pembelian barang
+📤 Penjualan barang 
+👥 Pelanggan √
+👤 Admin & kasir √
+💰 Hutang/piutang jika diperlukan
+💸 Pengeluaran toko
+📈 Laporan penjualan √
+📊 Laporan laba/rugi √
+📦 Kartu stok
+🧾 Cetak struk
+🔎 Pencarian berdasarkan barcode/SKU
+
+| Kendala                               | Contoh masalah                                   | Dampak                                |
+| ------------------------------------- | ------------------------------------------------ | ------------------------------------- |
+| 📦 **Stok tidak akurat**              | Tidak tahu jumlah barang yang tersisa            | Barang habis tanpa diketahui          |
+| 📝 **Pencatatan masih manual**        | Transaksi dicatat di buku                        | Mudah salah/hilang                    |
+| 💰 **Sulit menghitung keuntungan**    | Harga beli dan harga jual tidak terdokumentasi   | Tidak tahu laba sebenarnya            |
+| 🛒 **Transaksi tidak tercatat semua** | Penjualan kecil sering tidak dicatat             | Omzet sulit dihitung                  |
+| 📥 **Pembelian tidak terkontrol**     | Tidak ada riwayat pembelian dari supplier        | Sulit mengecek pengeluaran            |
+| ⚠️ **Barang kedaluwarsa**             | Tidak mengetahui tanggal kedaluwarsa             | Barang rusak dan menyebabkan kerugian |
+| 💳 **Hutang pelanggan**               | Bon pelanggan dicatat di kertas                  | Lupa siapa yang berhutang             |
+| 🚚 **Pengelolaan supplier**           | Tidak ada catatan harga dan pembelian sebelumnya | Sulit membandingkan pembelian         |
+| 💵 **Uang toko tercampur**            | Uang pribadi dan uang usaha bercampur            | Sulit mengetahui kondisi keuangan     |
+| 📊 **Tidak ada laporan**              | Tidak ada laporan harian/bulanan                 | Pemilik sulit mengevaluasi usaha      |
+
